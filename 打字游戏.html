@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="jquery-3.2.1.min.js"></script>
+    <script src="打字游戏.js"></script>
+</head>
+<body>
+<div class="record">
+    <div class="mask"></div>
+    <img src="img/3.jpg" alt="">
+    <div class="paihang"><img src="img/aref.png" alt=""></div>
+    <div class="score"><img src="img/scor.png" alt=""><span>0</span><span>分数</span></div>
+    <div class="gk"><img src="img/scor.png" alt=""><span class="gk1">1</span><span>关卡</span></div>
+    <div class="lift">
+        <img src="img/life.png" alt="">
+        <div class="progress"></div>
+        <span>10</span>
+    </div>
+    <div class="pause">
+        <img src="img/stop.png" alt="">
+    </div>
+    <div class="music">
+        <img src="img/music.png" alt="">
+    </div>
+    <div class="stopbox">
+        <img src="img/stopbox.png" alt="">
+        <img src="img/continue.png" alt="">
+        <img src="img/restart.png" alt="">
+        <img src="img/quit.png" alt="">
+    </div>
+    <div class="startbox">
+        <img src="img/logo.png" alt="">
+        <img src="img/choose.png" alt="">
+        <img src="img/start.png" alt="">
+    </div>
+    <div class="choosebox">
+        <img src="img/difficult.png" alt="">
+        <img src="img/easy.png" alt="">
+        <img src="img/medium.png" alt="">
+        <img src="img/hard.png" alt="">
+        <img src="img/back.png" alt="">
+    </div>
+    <div class="overbox">
+        <img src="img/over.png" alt="">
+        <span>0</span>
+        <span>0</span>
+        <img src="img/restart.png" alt="">
+        <img src="img/quit.png" alt="">
+
+    </div>
+</div>
+<style>
+    @keyframes move{
+        0%{
+            transform:translateX(0);
+        }
+        25%{
+            transform:translateX(-30px);
+        }
+        50%{
+            transform:translateX(0px);
+        }
+        75%{
+            transform:translateX(30px);
+        }
+        100%{
+            transform:translateX(0);
+        }
+    }
+    @keyframes rotate{
+        0%{
+            transform:rotate(0deg);
+        }
+        100%{
+            transform:rotate(360deg);
+        }
+    }
+    *{
+        padding: 0;
+        margin: 0;
+    }
+    html,body{
+        width:100%;
+        height:100%;
+        background: #000;
+    }
+    body{
+        /*background: url("img/2.jpg") no-repeat center / cover;*/
+        /*background-attachment: fixed;*/
+        font-size: 24px;
+        line-height: 30px;
+        text-align: center;
+        font-weight: bold;
+        text-shadow: 0 0 5px #000;
+        color: #fff;
+    }
+    .mask{
+        width:100%;
+        height:100%;
+        background: rgba(0,0,0,0.5);
+        position: absolute;
+        top: 0;
+        left:0;
+        z-index: 99;
+        display: none;
+    }
+    .record>img{
+        display: block;
+        width:100%;
+        height:100%;
+        position: absolute;
+        top: 0;
+        left:0;
+    }
+    .record{
+        padding:10px;
+    }
+    .char{
+        width:60px;
+        height:60px;
+        /*background: #fff;*/
+        text-align: center;
+        line-height: 60px;
+        font-size: 20px;
+        color: #000;
+        position: absolute;
+        top: 0;
+        left:0;
+        background-position: center;
+        background-size: cover;
+    }
+    .chstart{
+        width:90px;
+        height:90px;
+        background:url("img/restart.png") no-repeat 50% 50%;
+        position: absolute;
+        top:80%;
+        left:0;
+    }
+    .paihang>img{
+        display: block;
+        width:73px;
+        height:73px;
+        position: absolute;
+        top:0;
+        left: 64px;
+        z-index: 100;
+        cursor: pointer;
+    }
+    .score{
+        display: none;
+    }
+    .score>img{
+        position: absolute;
+        top:0;
+        left:150px;
+        z-index: 99;
+    }
+    .score>span:nth-of-type(1){
+          position: absolute;
+          top:25px;
+          left:270px;
+          z-index: 99;
+      }
+    .score>span:nth-of-type(2){
+        position: absolute;
+        top:20px;
+        left:155px;
+        z-index: 99;
+    }
+    .gk{
+        display: none;
+    }
+    .gk>img{
+        position: absolute;
+        top:0;
+        left:350px;
+        z-index: 99;
+    }
+    .gk>span:nth-of-type(1){
+        position: absolute;
+        top:25px;
+        left:470px;
+        z-index: 99;
+    }
+    .gk>span:nth-of-type(2){
+        position: absolute;
+        top:0;
+        left:350px;
+        z-index: 99;
+        margin-top: 19px;
+        margin-left: 7px;
+    }
+    .lift{
+        display: none;
+    }
+    .lift>img:nth-of-type(1){
+        position: absolute;
+        top:5px;
+        left:550px;
+        z-index: 99;
+    }
+    .progress{
+        width: 165px;
+        height: 40px;
+        background: #be7408;
+        position: absolute;
+        top:19px;
+        left:614px;
+        z-index: 55;
+        border-radius: 5px;
+        box-shadow: 0 0 10px #000 inset;
+        background-image: url(img/progress.png);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        transition: all 1s;
+        display: block;
+    }
+    .stopbox{
+        display: none;
+        box-shadow: 0 0 0 1000px rgba(0,0,0,0.5);
+    }
+    .stopbox>img:nth-of-type(1){
+        position: absolute;
+        top: calc(50% - 140px);
+        left: calc(50% - 235px);
+        z-index: 100;
+    }
+
+    .stopbox>img:nth-of-type(2){
+        display: block;
+        width:85px;
+        height:85px;
+        position: absolute;
+        top: calc(50% - 57px);
+        left: calc(50% - 185px);
+        transition: all .8s ease;
+        z-index: 100;
+    }
+    .stopbox>img:nth-of-type(2):hover{
+        transform:scale(1.1);
+    }
+    .stopbox>img:nth-of-type(3):hover{
+        transform: rotate(720deg);
+    }
+    .stopbox>img:nth-of-type(4):hover{
+        transform:translateX(-30px);
+    }
+    .stopbox>img:nth-of-type(3){
+        display: block;
+        width:90px;
+        height:90px;
+        position: absolute;
+        top: calc(50% - 57px);
+        left: calc(50% - 65px);
+        transition: all 1.5s ease;
+        z-index: 100;
+    }
+    .stopbox>img:nth-of-type(4){
+        display: block;
+        width:90px;
+        height:90px;
+        position: absolute;
+        top: calc(50% - 57px);
+        left: calc(50% - -79px);
+        transition: all .8s ease;
+        z-index: 100;
+    }
+    .startbox{
+        position: absolute;
+        top: calc(50% - 16px);
+        left: calc(50% - -43px);
+        z-index: 99;
+        animation: move 3s linear infinite;
+        transition: all 1s;
+        display: block;
+    }
+    .startbox>img:nth-of-type(1){
+        position: absolute;
+        top: calc(50% - 206px);
+        left: calc(50% - 315px);
+        z-index: 99;
+    }
+    .startbox>img:nth-of-type(2){
+        position: absolute;
+        top: calc(50% - -80px);
+        left: calc(50% - 375px);
+        z-index: 99;
+        transition: all .8s ease;
+    }
+    .startbox>img:nth-of-type(3){
+        position: absolute;
+        top: calc(50% - -74px);
+        left: calc(50% - -15px);
+        z-index:99 ;
+        transition: all .8s ease;
+    }
+    .startbox>img:nth-of-type(2):hover,.startbox>img:nth-of-type(3):hover{
+        transform: scale(1.1);
+    }
+    .choosebox{
+        display: none;
+    }
+    .choosebox>img:nth-of-type(1){
+        position: absolute;
+        top: calc(50% - 205px);
+        left: calc(50% - 431px);
+        z-index: 99;
+    }
+    .choosebox>img:nth-of-type(2){
+        position: absolute;
+        top: calc(50% - -1px);
+        left: calc(50% - 384px);
+        z-index: 99;
+    }
+    .choosebox>img:nth-of-type(3){
+         position: absolute;
+         top: calc(50% - -1px);
+         left: calc(50% - 100px);
+        z-index: 99;
+     }
+    .choosebox>img:nth-of-type(4){
+        position: absolute;
+        top: calc(50% - -1px);
+        left: calc(50% - -170px);
+        z-index: 99;
+    }
+    .choosebox>img:nth-of-type(5){
+        position: absolute;
+        top: calc(50% - -105px);
+        left: calc(50% - 43px);
+        z-index: 99;
+        transition: all 1s;
+    }
+    .choosebox>img:nth-of-type(2):hover,.choosebox>img:nth-of-type(3):hover,.choosebox>img:nth-of-type(4):hover{
+        transition: all .8s ease;
+        transform: scale(1.1);
+    }
+    .choosebox>img:nth-of-type(5):hover{
+        transition: all .8s ease;
+        transform: rotate(180deg);
+    }
+    .overbox{
+        display: none;
+    }
+    .overbox>span:nth-of-type(1){
+        position: absolute;
+        top: calc(50% - 52px);
+        left: calc(50% - -91px);
+        z-index: 100;
+        transition: all 1s;
+        /*font-size: 24px;*/
+    }
+    .overbox>span:nth-of-type(2){
+        position: absolute;
+        top: calc(50% - 5px);
+        left: calc(50% - -91px);
+        z-index: 100;
+        transition: all 1s;
+    }
+    .overbox>img:nth-of-type(1){
+        position: absolute;
+        top: calc(50% - 210px);
+        left: calc(50% - 203px);
+        z-index: 100;
+        transition: all 1s;
+    }
+    .overbox>img:nth-of-type(2){
+        display: block;
+        width:90px;
+        height:90px;
+        position: absolute;
+        top: calc(50% - -60px);
+        left: calc(50% - 73px);
+        z-index: 100;
+        transition: all 1s;
+    }
+    .overbox>img:nth-of-type(2):hover{
+    transform: rotate(720deg);
+    }
+    .overbox>img:nth-of-type(3){
+        display: block;
+        width:90px;
+        height:90px;
+        position: absolute;
+        top: calc(50% - -60px);
+        left: calc(50% - -73px);
+        z-index: 100;
+        transition: all 1s;
+    }
+    .overbox>img:nth-of-type(3):hover{
+        transform: translateX(-30px);
+    }
+    .pause{
+        width:75px;
+        height:75px;
+        position: absolute;
+        top:15px;
+        right:135px;
+        z-index: 99;
+        cursor: pointer;
+        display: none;
+    }
+    .music{
+        width:73px;
+        height: 73px;
+        background: #FEBE2B;
+        border-radius: 50%;
+        box-sizing: border-box;
+        border: 4px solid #fff;
+        position: absolute;
+        top:15px;
+        right:60px;
+        z-index: 99;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        animation: rotate 3s linear infinite;
+        cursor: pointer;
+    }
+</style>
+<script>
+    let record=document.querySelector('.record');
+    let mask=document.querySelector('.mask');
+    let startbox=document.querySelector('.startbox');
+    let start=document.querySelector('.startbox>img:nth-of-type(3)');
+    let classify=document.querySelector('.startbox>img:nth-of-type(2)');
+    let easy=document.querySelector('.choosebox>img:nth-of-type(2)');
+    let medium=document.querySelector('.choosebox>img:nth-of-type(3)');
+    let hard=document.querySelector('.choosebox>img:nth-of-type(4)');
+    let back1=document.querySelector('.choosebox>img:nth-of-type(5)');
+    let choosebox=document.querySelector('.choosebox');
+    let score=document.querySelector('.score');
+    let gk=document.querySelector('.gk');
+    let lift=document.querySelector('.lift');
+    let chstart=document.querySelector('.chstart');
+    let pause=document.querySelector('.pause');
+    let stopbox=document.querySelector('.stopbox');
+    let stop1=document.querySelector('.stopbox>img:nth-of-type(2)');
+    let stoprestart=document.querySelector('.stopbox>img:nth-of-type(3)');
+    let stopquit=document.querySelector('.stopbox>img:nth-of-type(4)');
+    let overbox=document.querySelector('.overbox');
+    let overboxrstart=document.querySelector('.overbox>img:nth-of-type(2)');
+    let overboxquit=document.querySelector('.overbox>img:nth-of-type(3)');
+    let music=document.querySelector('.music');
+
+    let newget =new Game();
+
+//    音频
+    let audio = document.createElement("audio");
+    audio.src = "song.mp3 ";
+    audio.play();
+    var flag=true;
+    start.onclick=function () {
+        startbox.style.display="none";
+        score.style.display='block';
+        gk.style.display='block';
+        lift.style.display='block';
+        pause.style.display='block'
+        let imgs=$(' .record>img');
+        let src='img/2.jpg';
+        imgs.attr('src',src);
+        newget.getChars();
+
+    };
+    classify.onclick=function () {
+        choosebox.style.display='block';
+        startbox.style.display="none";
+    };
+//    简单模式
+    easy.onclick=function(){
+        choosebox.style.display="none";
+        score.style.display='block';
+        gk.style.display='block';
+        lift.style.display='block';
+        pause.style.display='block'
+        let imgs=$(' .record>img');
+        let src='img/2.jpg';
+        imgs.attr('src',src);
+        newget.easy();
+    };
+    //    中等难度模式
+    medium.onclick=function () {
+        choosebox.style.display="none";
+        score.style.display='block';
+        gk.style.display='block';
+        lift.style.display='block';
+        pause.style.display='block'
+        let imgs=$(' .record>img');
+        let src='img/2.jpg';
+        imgs.attr('src',src);
+        newget.medium();
+    };
+//    困难模式
+    hard.onclick=function () {
+        choosebox.style.display="none";
+        score.style.display='block';
+        gk.style.display='block';
+        lift.style.display='block';
+        pause.style.display='block'
+        let imgs=$(' .record>img');
+        let src='img/2.jpg';
+        imgs.attr('src',src);
+        newget.hard();
+    };
+//    选择难度的返回
+    back1.onclick=function () {
+        startbox.style.display="block";
+        choosebox.style.display='none'
+    };
+    music.onmouseover=function () {
+        music.style.animation='none';
+    };
+    music.onmouseout=function () {
+        music.style.animation= 'rotate 3s linear infinite';
+    };
+    music.onclick=function () {
+        let flag=true;
+        while(!flag){
+            audio.play();
+            audio.currentTime = 0;
+            flag=true;
+        }
+        while(flag){
+            audio.pause();
+            audio.currentTime = 0;
+            flag=false;
+        }
+    };
+//游戏暂停
+    pause.onclick=function () {
+        mask.style.display='block';
+        stopbox.style.display='block';
+        newget.pause1();
+    };
+        // 游戏中点击暂停的继续事件
+        stop1.onclick=function () {
+            mask.style.display='none';
+            stopbox.style.display="none";
+            newget.play();
+        };
+        // 游戏中点击暂停的重新再来
+        stoprestart.onclick=function(){
+            mask.style.display='none';
+            stopbox.style.display="none";
+            newget.trim();
+            newget.restart();
+        };
+        // 游戏中点击暂停的回到主界面
+        stopquit.onclick=function () {
+            newget.trim();
+            stopbox.style.display='none';
+            mask.style.display='none';
+            overbox.style.display='none';
+            startbox.style.display="block";
+            score.style.display='none';
+            gk.style.display='none';
+            lift.style.display='none';
+            pause.style.display='none';
+            let imgs=$(' .record>img');
+            let src='img/3.jpg';
+            imgs.attr('src',src);
+            overbox.style.display='none';
+        };
+
+//游戏结束
+    //游戏结束返回主界面
+    overboxquit.onclick=function(){
+            mask.style.display='none';
+            overbox.style.display='none';
+            startbox.style.display="block";
+            score.style.display='none';
+            gk.style.display='none';
+            lift.style.display='none';
+            pause.style.display='none';
+            let imgs=$(' .record>img');
+            let src='img/3.jpg';
+            imgs.attr('src',src);
+                newget.trim();
+        };
+    //游戏结束后重新开始
+    overboxrstart.onclick=function(){
+        mask.style.display='none';
+        overbox.style.display='none';
+        newget.trim();
+        newget.getChars();
+    }
+</script>
+
+
+    </body>
+</html>
